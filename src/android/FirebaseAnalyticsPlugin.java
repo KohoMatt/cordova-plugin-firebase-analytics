@@ -9,6 +9,13 @@ import by.chemerisuk.cordova.support.ReflectiveCordovaPlugin;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+
 import org.apache.cordova.CallbackContext;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +35,18 @@ public class FirebaseAnalyticsPlugin extends ReflectiveCordovaPlugin {
         Context context = this.cordova.getActivity().getApplicationContext();
 
         this.firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+    }
+
+    @CordovaMethod
+    private void getAppInstanceId(CallbackContext callbackContext) {
+        Task<String> task = this.firebaseAnalytics.getAppInstanceId();
+        
+        task.addOnSuccessListener(new OnSuccessListener<String>() {
+            @Override
+            public void onSuccess(String string) {
+                callbackContext.success(string);
+            }
+        });
     }
 
     @CordovaMethod
